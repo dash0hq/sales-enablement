@@ -1,6 +1,6 @@
 # Booth Practice
 
-A single-page training game for Dash0 booth staff. It walks through 33 real booth conversations (competitor comparisons, OpenTelemetry, pricing, Agent0, Darkplane, and persona-specific questions) so you can rehearse answers before an event.
+A single-page training game for Dash0 booth staff. It walks through 34 real booth conversations (competitor comparisons, OpenTelemetry, pricing, Agent0, Darkplane, and persona-specific questions) so you can rehearse answers before an event.
 
 ## How it works
 
