@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Booth Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Dash0 brand: Salmon #FD8C66, Alabaster #FAFAFA, Cod Gray #101010 */
+  --bg:#FAFAFA; --card:#FFFFFF; --ink:#101010; --muted:#5C5C5C; --line:#E2E2E2;
+  --accent:#FD8C66; --accent-ink:#101010; --soft:#F1F1F1; --link:#B8431B; --focus:#101010;
+  --good:#0F7A43; --good-bg:#E1F4E9; --mid:#8F5A00; --mid-bg:#FBEFD5; --bad:#B3261E; --bad-bg:#FBE4E4;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101010; --card:#1A1A1A; --ink:#FAFAFA; --muted:#A9A9A9; --line:#2E2E2E;
+    --accent:#FD8C66; --accent-ink:#101010; --soft:#222222; --link:#FD8C66; --focus:#FD8C66;
+    --good:#5FD39A; --good-bg:#12291F; --mid:#F0BE5A; --mid-bg:#2E2510; --bad:#FF7A7A; --bad-bg:#331717;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101010; --card:#1A1A1A; --ink:#FAFAFA; --muted:#A9A9A9; --line:#2E2E2E;
+  --accent:#FD8C66; --accent-ink:#101010; --soft:#222222; --link:#FD8C66; --focus:#FD8C66;
+  --good:#5FD39A; --good-bg:#12291F; --mid:#F0BE5A; --mid-bg:#2E2510; --bad:#FF7A7A; --bad-bg:#331717;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.12;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.brandwrap{display:flex;align-items:center;gap:14px}
+.logo{display:block;height:22px;width:auto;color:var(--ink)}
+.brandwrap .brand{padding-left:14px;border-left:1px solid var(--line);font-size:19px}
+@media (max-width:480px){.logo{height:18px}.brandwrap{gap:10px}.brandwrap .brand{padding-left:10px;font-size:17px}}
+.brand{font-family:var(--display);font-weight:700;font-size:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:15px;font-weight:500}
+.chip.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}
+.hero h1{font-size:clamp(34px,7vw,52px);margin-bottom:12px}
+.hero p{color:var(--muted);margin:0 0 20px;max-width:56ch}
+.field{margin:18px 0}
+.field > .lab{font-weight:600;margin-bottom:8px;display:block}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+input[type=text]{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--soft);color:var(--ink);font:inherit}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:480px){.names{grid-template-columns:1fr}}
+.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:13px 22px;font-weight:600;font-size:17px}
+.ghost{background:transparent;border:1px solid var(--line);border-radius:12px;padding:12px 20px;font-weight:500}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:18px}
+.bar > i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.turn{color:var(--muted);font-size:15px;margin-bottom:6px}
+.persona{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:2px 10px;font-size:14px;font-weight:500;margin-bottom:12px}
+.says{border-left:5px solid var(--accent);background:var(--soft);border-radius:0 14px 14px 0;padding:16px 18px;margin:6px 0 18px;font-size:19px}
+.scene{display:block;color:var(--muted);font-size:15px;font-style:italic;margin-bottom:8px}
+.says small{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.q{font-size:26px;margin-bottom:14px}
+.hint{color:var(--muted);margin:0 0 16px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;width:100%}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .k{flex:none;width:28px;height:28px;border-radius:8px;background:var(--soft);display:grid;place-items:center;font-weight:600;font-size:15px}
+.opt.t2{border-color:var(--good);background:var(--good-bg)}
+.opt.t1{border-color:var(--mid);background:var(--mid-bg)}
+.opt.t0{border-color:var(--bad);background:var(--bad-bg)}
+.opt.picked{box-shadow:0 0 0 3px var(--accent)}
+.opt:disabled{cursor:default}
+.tag{display:block;font-size:14px;font-weight:600;margin-top:6px}
+.t2 .tag{color:var(--good)} .t1 .tag{color:var(--mid)} .t0 .tag{color:var(--bad)}
+.opt .txt{flex:1}
+.opt .why{display:block;font-size:15px;color:var(--muted);margin-top:4px}
+.model{margin-top:16px;border:1px dashed var(--line);border-radius:14px;padding:14px 16px}
+.model b{display:block;margin-bottom:4px}
+.pts{font-family:var(--display);font-size:20px;margin:16px 0 4px}
+.actions{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.score-big{font-family:var(--display);font-size:clamp(48px,12vw,84px);line-height:1}
+.rank{font-family:var(--display);font-size:26px;margin:8px 0 4px}
+table{width:100%;border-collapse:collapse;margin:14px 0}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-size:16px}
+th{font-weight:600;color:var(--muted)}
+.miss{background:var(--soft);border-radius:14px;padding:14px 16px;margin:10px 0}
+.miss q{display:block;font-weight:600;margin-bottom:4px;quotes:none}
+.podium{display:grid;gap:8px;margin:14px 0}
+.pl{display:flex;justify-content:space-between;background:var(--soft);border-radius:12px;padding:12px 16px;font-weight:500}
+.pl.win{outline:2px solid var(--good)}
+.docs{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.docs a{display:block;margin-top:6px}
+.model a{color:var(--link);font-weight:500;word-break:break-word}
+.note{color:var(--muted);font-size:15px;margin-top:16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+var SCENARIOS = [
+  {
+    "attendee": "\"How are you better than Datadog? We already send OpenTelemetry data to them.\"",
+    "options": [
+      {
+        "t": "Datadog accepts OpenTelemetry, but it maps the data into its own format and pricing structure. Dash0 keeps your data native to OpenTelemetry, and we don't charge per host or per user seat. You pay for what you send: logs, spans, and metrics.",
+        "tier": 2
+      },
+      {
+        "t": "Datadog is too expensive, and we're the cheaper option.",
+        "tier": 1
+      },
+      {
+        "t": "Datadog doesn't actually support OpenTelemetry.",
+        "tier": 0
+      }
+    ],
+    "learn": "Concede Datadog's large feature set, then contrast accepting OpenTelemetry with being OpenTelemetry-native, and host-based pricing with pay-per-signal.",
+    "docs": [
+      {
+        "label": "Dash0 vs Datadog",
+        "url": "https://www.dash0.com/datadog-alternative"
+      },
+      {
+        "label": "Dash0 comparison: best OpenTelemetry tools",
+        "url": "https://www.dash0.com/comparisons/best-opentelemetry-tools"
+      },
+      {
+        "label": "Datadog docs: OpenTelemetry metrics",
+        "url": "https://docs.datadoghq.com/metrics/open_telemetry/"
+      },
+      {
+        "label": "Datadog docs: billing and pricing units",
+        "url": "https://docs.datadoghq.com/account_management/billing/pricing/"
+      },
+      {
+        "label": "Dash0 pricing",
+        "url": "https://www.dash0.com/pricing"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We run Grafana, Loki, Tempo, and Mimir. Why would we switch?\"",
+    "options": [
+      {
+        "t": "Grafana is great. If you run Loki, Tempo, and Mimir yourselves, that's separate systems to operate, each with its own query language: PromQL, LogQL, and TraceQL. Grafana Cloud can manage them for you, but each signal still sits in its own store. Dash0 is one managed platform on one OpenTelemetry data model, with PromQL and Perses dashboards, so your skills and dashboards carry over.",
+        "tier": 2
+      },
+      {
+        "t": "Grafana is too hard to configure and dashboarding is painful.",
+        "tier": 1
+      },
+      {
+        "t": "OpenTelemetry makes Grafana obsolete.",
+        "tier": 0
+      }
+    ],
+    "learn": "Validate their love of open standards. Concede Grafana's open source and self-hosting strengths, and that Grafana Cloud is managed. The contrast is one data model versus separate stores and query languages.",
+    "docs": [
+      {
+        "label": "Dash0 vs Grafana",
+        "url": "https://www.dash0.com/grafana-alternative"
+      },
+      {
+        "label": "Dash0 comparison: best Grafana alternatives",
+        "url": "https://www.dash0.com/comparisons/best-grafana-alternatives-2025"
+      },
+      {
+        "label": "Grafana docs: send and ingest OTLP data",
+        "url": "https://grafana.com/docs/opentelemetry/ingest/"
+      },
+      {
+        "label": "Dash0 dashboards",
+        "url": "https://www.dash0.com/dashboards"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We use Dynatrace enterprise-wide. Their OneAgent does everything automatically, why would we care about Dash0?\"",
+    "options": [
+      {
+        "t": "Dynatrace is a strong enterprise platform, especially for automatic discovery and topology. Its best experience relies on OneAgent, its own storage, and its own query language (DQL), and its pricing has several meters, including host memory hours and data ingest. Dash0 is built on open standards: OpenTelemetry, PromQL, and Perses, with pricing by the telemetry you send. For cloud-native teams already on OpenTelemetry, that's the fit.",
+        "tier": 2
+      },
+      {
+        "t": "Dynatrace is too expensive and complex for modern Kubernetes clusters.",
+        "tier": 1
+      },
+      {
+        "t": "Dynatrace doesn't support cloud-native microservices or OpenTelemetry.",
+        "tier": 0
+      }
+    ],
+    "learn": "Concede Dynatrace's automation, topology, and hybrid strengths. Dynatrace does accept OpenTelemetry, so the contrast is the agent, the query language, and the pricing meters, never \"no OpenTelemetry support.\"",
+    "docs": [
+      {
+        "label": "Dash0 vs Dynatrace",
+        "url": "https://www.dash0.com/dynatrace-alternative"
+      },
+      {
+        "label": "Dash0 comparison: best Dynatrace alternatives",
+        "url": "https://www.dash0.com/comparisons/best-dynatrace-alternatives"
+      },
+      {
+        "label": "Dynatrace docs: OpenTelemetry licensing",
+        "url": "https://docs.dynatrace.com/docs/ingest-from/opentelemetry/opentelemetry-licensing"
+      },
+      {
+        "label": "Dash0 pricing",
+        "url": "https://www.dash0.com/pricing"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We send our telemetry to New Relic via OTLP. Isn't that the exact same thing as what Dash0 does?\"",
+    "options": [
+      {
+        "t": "New Relic accepts OTLP, but it stores your data in its own database (NRDB) and you query it with NRQL. Dash0 keeps your data native to OpenTelemetry and supports open query languages like PromQL and SQL. When your data stays standard, you keep context and you don't build vendor-locked query skills.",
+        "tier": 2
+      },
+      {
+        "t": "New Relic's interface is dated and their query language is too hard.",
+        "tier": 1
+      },
+      {
+        "t": "New Relic charges you every time you send an OpenTelemetry trace.",
+        "tier": 0
+      }
+    ],
+    "learn": "Pivot from \"accepts OTel\" to \"native OTel\", and from a proprietary query language (NRQL) to open ones (PromQL, SQL).",
+    "docs": [
+      {
+        "label": "Dash0 vs New Relic",
+        "url": "https://www.dash0.com/newrelic-alternative"
+      },
+      {
+        "label": "Dash0 comparison: best OpenTelemetry tools",
+        "url": "https://www.dash0.com/comparisons/best-opentelemetry-tools"
+      },
+      {
+        "label": "New Relic docs: OpenTelemetry APM",
+        "url": "https://docs.newrelic.com/docs/opentelemetry/get-started/apm-monitoring/opentelemetry-apm-intro/"
+      },
+      {
+        "label": "New Relic blog: querying OpenTelemetry data with NRQL",
+        "url": "https://newrelic.com/blog/best-practices/how-to-query-opentelemetry-data-in-new-relic"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We built our logging and trace pipeline on Elasticsearch, Logstash, and Kibana. What makes Dash0 better?\"",
+    "options": [
+      {
+        "t": "If you run ELK yourselves, mappings, cluster scaling, and index lifecycles become a job of their own. Elastic does offer a managed cloud and supports OpenTelemetry too, so I'd start with what hurts: running it, the cost, or finding things. Dash0 is fully managed and OpenTelemetry-native, with logs, metrics, and traces in one place.",
+        "tier": 2
+      },
+      {
+        "t": "Elasticsearch is way too expensive and slow for trace data.",
+        "tier": 1
+      },
+      {
+        "t": "ELK doesn't support OpenTelemetry data at all.",
+        "tier": 0
+      }
+    ],
+    "learn": "Separate self-managed ELK from Elastic's managed cloud. Elastic says its serverless product stores OpenTelemetry data natively, so never claim it can't handle OpenTelemetry. Find their pain first.",
+    "docs": [
+      {
+        "label": "Dash0 vs Elastic",
+        "url": "https://www.dash0.com/elastic-alternative"
+      },
+      {
+        "label": "Dash0 comparison: best Elastic Observability alternatives",
+        "url": "https://www.dash0.com/comparisons/8-best-elastic-observability-alternatives"
+      },
+      {
+        "label": "Elastic docs: start using OpenTelemetry",
+        "url": "https://www.elastic.co/docs/solutions/observability/get-started/opentelemetry/start-with-otel"
+      },
+      {
+        "label": "Elastic blog: Elastic Cloud Serverless observability",
+        "url": "https://www.elastic.co/blog/elastic-observability-serverless"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We're looking at SigNoz because it's open source and built on OpenTelemetry. Why Dash0 instead?\"",
+    "options": [
+      {
+        "t": "SigNoz is a solid open source project, and it's OpenTelemetry-native too, with both a self-hosted edition and a managed cloud. If open source and self-hosting matter most, that's a real option. Dash0 is a managed platform, with SignalControl to cut telemetry volume, continuous profiling, and Agent0 and Darkplane for AI workflows.",
+        "tier": 2
+      },
+      {
+        "t": "Dash0 has way more features and a better interface than SigNoz.",
+        "tier": 1
+      },
+      {
+        "t": "SigNoz isn't actually native OpenTelemetry.",
+        "tier": 0
+      }
+    ],
+    "learn": "SigNoz also has a managed cloud, an MCP server, and no per-host or per-seat pricing, so never say it's self-hosted only. Frame the decision as open source and self-hosting versus Dash0's managed platform and features.",
+    "docs": [
+      {
+        "label": "Dash0 vs SigNoz",
+        "url": "https://www.dash0.com/signoz-alternative"
+      },
+      {
+        "label": "Dash0 comparison: best OpenTelemetry tools",
+        "url": "https://www.dash0.com/comparisons/best-opentelemetry-tools"
+      },
+      {
+        "label": "SigNoz pricing",
+        "url": "https://signoz.io/pricing/"
+      },
+      {
+        "label": "SigNoz on GitHub",
+        "url": "https://github.com/signoz/signoz"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We love Honeycomb for tracing. Why should we consider Dash0?\"",
+    "options": [
+      {
+        "t": "Honeycomb is fantastic for deep, high-cardinality trace analysis, and it now supports logs and metrics too. Dash0's angle is open standards you already know, like PromQL and Perses, pricing by signal, and Agent0 for incident investigation. What matters most to your team?",
+        "tier": 2
+      },
+      {
+        "t": "Honeycomb is too niche for a full observability platform.",
+        "tier": 1
+      },
+      {
+        "t": "Honeycomb doesn't support logs or metrics.",
+        "tier": 0
+      }
+    ],
+    "learn": "Concede Honeycomb's tracing strength. It now covers traces, logs, and metrics, so never call it tracing-only. Ask what the team is optimizing for.",
+    "docs": [
+      {
+        "label": "Dash0 vs Honeycomb",
+        "url": "https://www.dash0.com/honeycomb-alternative"
+      },
+      {
+        "label": "Dash0 comparison: Honeycomb alternatives",
+        "url": "https://www.dash0.com/comparisons/honeycomb-alternatives-observability"
+      },
+      {
+        "label": "Honeycomb docs: metrics",
+        "url": "https://docs.honeycomb.io/get-started/honeycomb/metrics-in-honeycomb"
+      },
+      {
+        "label": "Honeycomb docs: logs",
+        "url": "https://docs.honeycomb.io/get-started/honeycomb/logs-in-honeycomb"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Our security and operations teams live in Splunk. Why would we add Dash0?\"",
+    "options": [
+      {
+        "t": "Splunk is an industry giant for logs and security, and it has an observability product too. For high-volume telemetry, costs can add up. Dash0 gives engineering and platform teams OpenTelemetry-native observability that you pay for by what you send, and the OpenTelemetry Collector lets you route data to more than one place.",
+        "tier": 2
+      },
+      {
+        "t": "Splunk is way too slow for real-time trace debugging.",
+        "tier": 1
+      },
+      {
+        "t": "Splunk doesn't work with Kubernetes or cloud-native applications.",
+        "tier": 0
+      }
+    ],
+    "learn": "Don't fight Splunk on security. Focus on engineering observability and cost. Have product marketing confirm Splunk's current product and pricing details.",
+    "docs": [
+      {
+        "label": "Dash0 vs Splunk",
+        "url": "https://www.dash0.com/splunk-alternative"
+      },
+      {
+        "label": "Dash0 comparison: best Splunk Observability Cloud alternatives",
+        "url": "https://www.dash0.com/comparisons/8-best-splunk-observability-cloud-alternatives"
+      },
+      {
+        "label": "OpenTelemetry Collector integration (Dash0 Hub)",
+        "url": "https://www.dash0.com/hub/integrations/int_opentelemetry-collector/overview"
+      },
+      {
+        "label": "Dash0 pricing",
+        "url": "https://www.dash0.com/pricing"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We're looking at Chronosphere to control our telemetry volume and cost. How does Dash0 handle volume?\"",
+    "options": [
+      {
+        "t": "Chronosphere is known for controlling telemetry volume and cost, and it's now part of Palo Alto Networks. Dash0 has SignalControl, which reduces telemetry volume before it's stored: it can drop noise, turn logs and spans into metrics, sample traces, and roll up high-cardinality metrics. So you pay for what you keep.",
+        "tier": 2
+      },
+      {
+        "t": "Dash0 is much cheaper than Chronosphere for microservices.",
+        "tier": 1
+      },
+      {
+        "t": "Chronosphere forces you to use proprietary agents.",
+        "tier": 0
+      }
+    ],
+    "learn": "Lead with SignalControl and its four steps. It can also run inside the customer's network as SignalControl Edge, so confirm availability for their account. Avoid price comparisons you can't back up.",
+    "docs": [
+      {
+        "label": "Dash0 vs Chronosphere",
+        "url": "https://www.dash0.com/chronosphere-alternative"
+      },
+      {
+        "label": "Dash0 comparison: Chronosphere alternatives",
+        "url": "https://www.dash0.com/comparisons/7-best-chronosphere-alternatives"
+      },
+      {
+        "label": "Palo Alto Networks: Chronosphere acquisition completed",
+        "url": "https://www.paloaltonetworks.com/company/press/2026/palo-alto-networks-completes-chronosphere-acquisition--unifying-observability-and-security-for-the-ai-era"
+      },
+      {
+        "label": "About SignalControl",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/about-signal-control"
+      },
+      {
+        "label": "SignalControl product page",
+        "url": "https://www.dash0.com/signalcontrol"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Every vendor at KubeCon says they support OpenTelemetry. What does \"OpenTelemetry-native\" actually mean for Dash0?\"",
+    "options": [
+      {
+        "t": "Some vendors take OpenTelemetry data at the door and map it into an internal format, which can change names and structure and tie you to their query engine. Dash0 keeps OpenTelemetry data native, with semantic conventions intact, and you query it with open standards like PromQL. Your instrumentation stays standard, so leaving doesn't mean re-instrumenting.",
+        "tier": 2
+      },
+      {
+        "t": "It means we don't make you install a custom agent on your server.",
+        "tier": 1
+      },
+      {
+        "t": "It means Dash0 owns and maintains the OpenTelemetry project.",
+        "tier": 0
+      }
+    ],
+    "learn": "Define \"native\" around how data is kept and queried, not just how it's ingested. Several competitors, such as SigNoz, Honeycomb, and Elastic, also call themselves OpenTelemetry-native, so contrast specific vendors carefully. Never imply Dash0 owns OpenTelemetry.",
+    "docs": [
+      {
+        "label": "Dash0 comparison: best OpenTelemetry tools",
+        "url": "https://www.dash0.com/comparisons/best-opentelemetry-tools"
+      },
+      {
+        "label": "SignalStore",
+        "url": "https://www.dash0.com/signalstore"
+      },
+      {
+        "label": "Dash0 comparison: best observability tools",
+        "url": "https://www.dash0.com/comparisons/best-observability-tools"
+      },
+      {
+        "label": "OpenTelemetry eBook (free)",
+        "url": "https://www.dash0.com/ebooks/opentelemetry-for-dummies"
+      },
+      {
+        "label": "Dash0 documentation",
+        "url": "https://www.dash0.com/docs/dash0"
+      }
+    ]
+  },
+  {
+    "attendee": "\"How hard is it to deploy Dash0 across our 50 Kubernetes clusters?\"",
+    "options": [
+      {
+        "t": "You have two standard options: roll out the OpenTelemetry Collector with Helm, or use the Dash0 Kubernetes operator. The operator installs a collector for you and can automatically instrument workloads in the namespaces you choose, for supported runtimes such as Java, Node.js, and .NET, without code changes. With 50 clusters, let me bring in an engineer to walk through the rollout with you.",
+        "tier": 2
+      },
+      {
+        "t": "You just run our install script on every Kubernetes node.",
+        "tier": 1
+      },
+      {
+        "t": "You must install a Dash0 DaemonSet on every node that overrides the Linux kernel.",
+        "tier": 0
+      }
+    ],
+    "learn": "Emphasize standard Kubernetes patterns (Helm, operator). Be clear that automatic instrumentation covers supported runtimes, and hand the rollout details to an engineer.",
+    "docs": [
+      {
+        "label": "Kubernetes operator: overview",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/dash0-operator/overview"
+      },
+      {
+        "label": "Kubernetes operator: installation",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/dash0-operator/installation"
+      },
+      {
+        "label": "Kubernetes operator: automatic workload instrumentation",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/dash0-operator/auto-instrumentation"
+      },
+      {
+        "label": "Kubernetes operator: configuration",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/dash0-operator/configuration"
+      },
+      {
+        "label": "About Kubernetes monitoring",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/about-kubernetes"
+      },
+      {
+        "label": "OpenTelemetry Collector integration (Dash0 Hub)",
+        "url": "https://www.dash0.com/hub/integrations/int_opentelemetry-collector/overview"
+      },
+      {
+        "label": "Dash0 operator on GitHub",
+        "url": "https://github.com/dash0hq/dash0-operator"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We generate millions of custom metrics with high-cardinality tags like user_id. Will Dash0 blow up our bill?\"",
+    "options": [
+      {
+        "t": "Cardinality is a real cost driver, so it's good to plan for it. Dash0 prices by data points, and SignalControl can roll high-cardinality metrics up into pre-aggregated series at ingestion, and drop noise you don't need. An engineer can look at your actual metrics with you.",
+        "tier": 2
+      },
+      {
+        "t": "Dash0 supports unlimited custom metrics for free.",
+        "tier": 1
+      },
+      {
+        "t": "You shouldn't put high-cardinality tags like user_id in your telemetry.",
+        "tier": 0
+      }
+    ],
+    "learn": "Validate the need, explain the pricing model and SignalControl's time series aggregation, and hand specifics to an engineer.",
+    "docs": [
+      {
+        "label": "About SignalControl",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/about-signal-control"
+      },
+      {
+        "label": "SignalControl: aggregate time series",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/aggregate-time-series"
+      },
+      {
+        "label": "SignalControl: filter out spam",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/filter-out-spam"
+      },
+      {
+        "label": "SignalControl: convert signals to metrics",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/convert-signals-to-metrics"
+      },
+      {
+        "label": "Dash0 pricing",
+        "url": "https://www.dash0.com/pricing"
+      },
+      {
+        "label": "Dash0 transparent cost",
+        "url": "https://www.dash0.com/transparent-cost"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We have hundreds of PromQL alerts and Perses dashboards. Do we have to rewrite everything for Dash0?\"",
+    "options": [
+      {
+        "t": "Not everything, no. Dash0's dashboards are built on Perses, so your Perses dashboards import as they are, and Dash0 can convert Grafana dashboards too, with some limits on specialized panels. Dash0 speaks PromQL, and the Dash0 operator for Kubernetes can sync your PersesDashboard resources and PrometheusRule alerts into Dash0. An engineer can check how your specific alerts and dashboards line up.",
+        "tier": 2
+      },
+      {
+        "t": "You can convert your dashboards with our built-in converter.",
+        "tier": 1
+      },
+      {
+        "t": "Dash0 replaces PromQL with our own AI-powered query language.",
+        "tier": 0
+      }
+    ],
+    "learn": "Dash0 dashboards use the Perses format natively, so Perses dashboards carry over and can be managed as code. Grafana dashboards can be converted, with limits for specialized panels like heatmaps. The operator syncs PersesDashboard and PrometheusRule resources. Don't promise a full migration until an engineer has checked their alerts and metric names.",
+    "docs": [
+      {
+        "label": "Import and export dashboards (Perses and Grafana)",
+        "url": "https://www.dash0.com/docs/dash0/dashboards/import-and-export-dashboards"
+      },
+      {
+        "label": "Import dashboards",
+        "url": "https://www.dash0.com/docs/dash0/dashboards/import-dashboards"
+      },
+      {
+        "label": "Dashboard source format (Perses)",
+        "url": "https://www.dash0.com/docs/dash0/dashboards/reference-dashboard-source-format"
+      },
+      {
+        "label": "Managing dashboards as code",
+        "url": "https://www.dash0.com/docs/dash0/dashboards/about-dashboards-as-code"
+      },
+      {
+        "label": "Manage dashboards as code (operator, Terraform, CLI)",
+        "url": "https://www.dash0.com/docs/dash0/dashboards/manage-dashboards-as-code"
+      },
+      {
+        "label": "Knowledge: what is Perses?",
+        "url": "https://www.dash0.com/knowledge/what-is-perses"
+      },
+      {
+        "label": "Kubernetes operator: overview",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/dash0-operator/overview"
+      },
+      {
+        "label": "Dash0 operator on GitHub",
+        "url": "https://github.com/dash0hq/dash0-operator"
+      },
+      {
+        "label": "Dash0 dashboards",
+        "url": "https://www.dash0.com/dashboards"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Does Dash0 only cover backend infrastructure, or can I track frontend user errors and page loads?\"",
+    "options": [
+      {
+        "t": "Yes. Dash0 Website Monitoring uses the Dash0 Web SDK, built on OpenTelemetry, to capture real user sessions, page loads, Core Web Vitals, requests, and JavaScript errors in the browser. Traces connect a session to the backend request behind it, so you can follow a problem from the browser to the backend. Synthetic checks cover uptime as well.",
+        "tier": 2
+      },
+      {
+        "t": "We do backend mostly, but we have a basic web plugin.",
+        "tier": 1
+      },
+      {
+        "t": "Frontend tracking requires buying a separate product add-on.",
+        "tier": 0
+      }
+    ],
+    "learn": "Paint the end-to-end picture: browser sessions, Core Web Vitals, and JavaScript errors connect to backend traces and logs in one platform. Web events are billed per million and spam filters can drop the noise, so it isn't a separate add-on.",
+    "docs": [
+      {
+        "label": "About Website Monitoring",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/websites/website-monitoring"
+      },
+      {
+        "label": "Set up the Web SDK",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/websites/getting-started-website-monitoring"
+      },
+      {
+        "label": "About Web Events",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/web-events/about-web-events"
+      },
+      {
+        "label": "Guide: Website monitoring with OpenTelemetry and Dash0",
+        "url": "https://www.dash0.com/guides/website-monitoring-with-opentelemetry-and-dash0"
+      }
+    ]
+  },
+  {
+    "attendee": "\"I heard Dash0 acquired Polar Signals. How does continuous profiling fit into observability?\"",
+    "options": [
+      {
+        "t": "Traces tell you which service is slow, and profiling tells you which function is using the CPU or memory. Dash0 supports continuous profiling through the OpenTelemetry eBPF profiler, deployed with the Dash0 operator, so profiles sit next to your traces, metrics, and logs. It's a fast-moving area after the Polar Signals acquisition, so an engineer can confirm current details.",
+        "tier": 2
+      },
+      {
+        "t": "Profiling replaces the need for logs and metrics.",
+        "tier": 1
+      },
+      {
+        "t": "Continuous profiling is a standalone tool that doesn't connect to traces.",
+        "tier": 0
+      }
+    ],
+    "learn": "Explain the bridge between tracing (where is time spent?) and profiling (which function uses the resources?). Profiling is supported today and still evolving, so hand specifics to an engineer.",
+    "docs": [
+      {
+        "label": "Continuous profiling",
+        "url": "https://www.dash0.com/continuous-profiling"
+      },
+      {
+        "label": "Knowledge: what is continuous profiling?",
+        "url": "https://www.dash0.com/knowledge/what-is-continuous-profiling"
+      },
+      {
+        "label": "Knowledge: what is a flame graph?",
+        "url": "https://www.dash0.com/faq/what-is-a-flame-graph"
+      },
+      {
+        "label": "Blog: Dash0 acquires Polar Signals",
+        "url": "https://www.dash0.com/blog/dash0-acquires-polar-signals"
+      },
+      {
+        "label": "Kubernetes operator: overview",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/dash0-operator/overview"
+      }
+    ]
+  },
+  {
+    "attendee": "\"If we send telemetry to Dash0, how do we keep sensitive customer data or API tokens from getting stored?\"",
+    "options": [
+      {
+        "t": "You have control before data leaves your network. The OpenTelemetry Collector's redaction processor, in your own collector or in SignalControl Edge, can mask or drop sensitive fields before they're sent. Dash0 also has opt-in redaction on ingestion, for example for payment card numbers, as a second line of defense. For compliance specifics, a colleague or our Trust Center can help.",
+        "tier": 2
+      },
+      {
+        "t": "Dash0 automatically deletes all sensitive data in the cloud using AI.",
+        "tier": 1
+      },
+      {
+        "t": "PII scrubbing is handled manually by your developers writing code.",
+        "tier": 0
+      }
+    ],
+    "learn": "Source redaction is the stronger guarantee, and ingestion redaction is a second line of defense. Hand compliance specifics to a colleague or the Trust Center.",
+    "docs": [
+      {
+        "label": "Redact cardholder data",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/data-privacy/redact-cardholder-data"
+      },
+      {
+        "label": "Guide: scrubbing sensitive data with OpenTelemetry",
+        "url": "https://www.dash0.com/guides/scrubbing-sensitive-data-with-opentelemetry"
+      },
+      {
+        "label": "Guide: the OpenTelemetry redaction processor",
+        "url": "https://www.dash0.com/guides/opentelemetry-redaction-processor"
+      },
+      {
+        "label": "SignalControl Edge: about",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/edge/about-signalcontrol-edge"
+      },
+      {
+        "label": "Dash0 Trust Center",
+        "url": "https://security.dash0.com"
+      },
+      {
+        "label": "Dash0 security",
+        "url": "https://www.dash0.com/security"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Traces are too expensive if we keep 100% of them. How does sampling work?\"",
+    "options": [
+      {
+        "t": "You shouldn't pay to store a million identical successful traces. SignalControl can sample traces by rules you define: keep every error and slow trace, and sample routine ones down to a target percentage. Metrics derived from your spans still reflect all traffic. Sampling can also run inside your own network with SignalControl Edge.",
+        "tier": 2
+      },
+      {
+        "t": "Dash0 randomly drops 90% of your data to save you money.",
+        "tier": 1
+      },
+      {
+        "t": "Sampling is bad practice, you must store 100% of traces to find bugs.",
+        "tier": 0
+      }
+    ],
+    "learn": "Frame sampling as smart volume control that keeps errors and slow traces. Warn that data dropped by sampling can't be recovered, so rules should be tested first.",
+    "docs": [
+      {
+        "label": "SignalControl: sample traces",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/sample-traces"
+      },
+      {
+        "label": "About SignalControl",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/about-signal-control"
+      },
+      {
+        "label": "SignalControl Edge: about",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/edge/about-signalcontrol-edge"
+      },
+      {
+        "label": "SignalControl: convert signals to metrics",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/convert-signals-to-metrics"
+      },
+      {
+        "label": "SignalControl Edge on Kubernetes",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/dash0-operator/signal-control-edge"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Every vendor has a generic LLM wrapper now. Is Agent0 just a glorified chat interface over my logs?\"",
+    "options": [
+      {
+        "t": "No. Agent0 is much more than a chat box. It investigates incidents across metrics, traces, and logs, watches for problems before anyone asks, creates dashboards and alerts checked against your live data, and drafts fixes and Terraform as pull requests, inside guardrails you define.",
+        "tier": 2
+      },
+      {
+        "t": "Agent0 lets you ask questions about your dashboards in plain English.",
+        "tier": 1
+      },
+      {
+        "t": "Agent0 automatically deploys code fixes to production without human review.",
+        "tier": 0
+      }
+    ],
+    "learn": "Show the range, not one feature: investigating incidents, Live Insights that flag problems before anyone asks, dashboards and alerts validated against live data, and fixes raised as pull requests for review. Agent0 also runs unattended through Automations, and customers set the guardrails.",
+    "docs": [
+      {
+        "label": "About Agent0",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0"
+      },
+      {
+        "label": "Agent0 overview",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/overview"
+      },
+      {
+        "label": "Agent0 Chat: investigate, live insights, and more",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/about-exploring-agent0"
+      },
+      {
+        "label": "Agent0: create alerts, dashboards, and infrastructure as code",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/asset-creation"
+      },
+      {
+        "label": "Agent0: create pull requests",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/overview/use-agent0/pull-requests"
+      },
+      {
+        "label": "Agent0 Chat",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/chat"
+      },
+      {
+        "label": "Agent0 key concepts",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/key-concepts"
+      },
+      {
+        "label": "About Agent0 Automations",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/automations"
+      },
+      {
+        "label": "Agent0 product page",
+        "url": "https://www.dash0.com/agent0"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We can't have an AI tool changing things in our production environment. How do you control Agent0?\"",
+    "options": [
+      {
+        "t": "You set the guardrails. In an automation you choose which tools Agent0 can use, whether it can reach the network, and how long it can run. By default it can read your data but only write back to the system that triggered it, and write actions like opening a pull request are off until you allow them. In chat, an admin can require approval before Agent0 changes anything, and pull requests go to your team for review. An engineer can show you exactly how the permissions work.",
+        "tier": 2
+      },
+      {
+        "t": "Agent0 is sandboxed so it can't break anything.",
+        "tier": 1
+      },
+      {
+        "t": "Agent0 requires full admin root access to your Kubernetes clusters to function.",
+        "tier": 0
+      }
+    ],
+    "learn": "Emphasize what the customer controls: allowed tools, network access, time limits, and approvals. Write actions are off by default, each approval is recorded with who approved it, and Agent0 over MCP is read-only. Hand permission details to an engineer.",
+    "docs": [
+      {
+        "label": "Set guardrails for automations",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/automations/create/set-guardrails"
+      },
+      {
+        "label": "Agent0 key concepts (guardrails)",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/key-concepts"
+      },
+      {
+        "label": "Automations: concepts and guardrails",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/automations/concepts"
+      },
+      {
+        "label": "Agent0: approve write actions",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/chat/approve-write-actions"
+      },
+      {
+        "label": "AI settings (Settings, Agent0)",
+        "url": "https://www.dash0.com/docs/dash0/miscellaneous/settings/ai"
+      },
+      {
+        "label": "Agent0 tools and connectors",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/tools-connectors"
+      },
+      {
+        "label": "About Agent0 Automations",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/automations"
+      },
+      {
+        "label": "Automations run fails with guardrail failure",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/automations/troubleshooting/guardrail-failure"
+      },
+      {
+        "label": "Changelog: Agent0 Automations",
+        "url": "https://www.dash0.com/changelog/agent0-automations"
+      },
+      {
+        "label": "Agent0 Automations product page",
+        "url": "https://www.dash0.com/agent0-automations"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Our engineers write code with Cursor, Copilot, and Claude Code. What are Darkplane and AI Coding Insights?\"",
+    "options": [
+      {
+        "t": "Darkplane is Dash0's control room for AI-assisted development. It covers what your AI builds before it reaches production: what your coding agents cost, who is using them, and whether the changes hold up. Its first capability is AI SDLC Insights, which used to be called AI Coding Insights. It works with Claude Code, Cursor, Codex, and GitHub Copilot CLI, and with GitHub connected it ties each coding session to the pull request it produced, so cost, adoption, and time to merge are in one place.",
+        "tier": 2
+      },
+      {
+        "t": "Darkplane is a dashboard for AI coding costs.",
+        "tier": 1
+      },
+      {
+        "t": "Darkplane is an AI assistant that writes code for your developers.",
+        "tier": 0
+      }
+    ],
+    "learn": "Say it in one line: Darkplane is the control room for the AI that writes your code. Agent0 governs what AI runs in production, and Darkplane governs what AI builds. AI Coding Insights was renamed AI SDLC Insights. The product page also describes AutoMerge, so check its status before promising it.",
+    "docs": [
+      {
+        "label": "About Darkplane",
+        "url": "https://www.dash0.com/docs/dash0/darkplane/overview"
+      },
+      {
+        "label": "About AI SDLC Insights",
+        "url": "https://www.dash0.com/docs/dash0/darkplane/insights"
+      },
+      {
+        "label": "AI SDLC Insights: the overview",
+        "url": "https://www.dash0.com/docs/dash0/darkplane/insights/overview"
+      },
+      {
+        "label": "AI SDLC Insights: set up",
+        "url": "https://www.dash0.com/docs/dash0/darkplane/insights/setup"
+      },
+      {
+        "label": "AI SDLC Insights: key concepts",
+        "url": "https://www.dash0.com/docs/dash0/darkplane/insights/key-concepts"
+      },
+      {
+        "label": "AI SDLC Insights: data privacy and redaction",
+        "url": "https://www.dash0.com/docs/dash0/darkplane/ai-coding/data-privacy"
+      },
+      {
+        "label": "Darkplane product page",
+        "url": "https://www.dash0.com/darkplane"
+      },
+      {
+        "label": "AI SDLC Insights product page",
+        "url": "https://www.dash0.com/darkplane-ai-sdlc-insights"
+      },
+      {
+        "label": "Blog: Build with AI. Ship with confidence.",
+        "url": "https://www.dash0.com/blog/build-with-ai-ship-with-confidence"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Can Agent0 run checks at night so our on-call engineers don't get woken up for false alarms?\"",
+    "options": [
+      {
+        "t": "Yes, that's what Agent0 Automations are for. You set a trigger, like a failed check, plus a plain-language prompt and guardrails. At 2 AM Agent0 can investigate and leave the findings in your notifications channel, so whoever is on call starts from an answer.",
+        "tier": 2
+      },
+      {
+        "t": "Agent0 will automatically mute all non-critical alerts at night.",
+        "tier": 1
+      },
+      {
+        "t": "Agent0 replaces your on-call team entirely, so no one gets alerted.",
+        "tier": 0
+      }
+    ],
+    "learn": "Position Automations as a first responder that investigates so humans start from an answer. Don't promise it removes alerts.",
+    "docs": [
+      {
+        "label": "About Agent0 Automations",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/automations"
+      },
+      {
+        "label": "Automations: concepts and guardrails",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/automations/concepts"
+      },
+      {
+        "label": "Automations: create an automation",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/automations/create"
+      },
+      {
+        "label": "Agent0 Automations product page",
+        "url": "https://www.dash0.com/agent0-automations"
+      },
+      {
+        "label": "Agent0: approve write actions",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/chat/approve-write-actions"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Can we use Dash0 from our IDE or AI assistants through MCP?\"",
+    "options": [
+      {
+        "t": "Yes. Dash0 has an official MCP server, hosted by Dash0, that works with assistants like Claude Code, Cursor, and Windsurf. You sign in with OAuth, or use an auth token for CI/CD. Your assistant can query metrics, logs, and traces, manage dashboards and alert rules, and hand a deeper investigation to Agent0, which is read-only over MCP. There's also a CLI and an API. Read-only queries over MCP are free, and Agent0 investigations use credits.",
+        "tier": 2
+      },
+      {
+        "t": "You can copy and paste log links into your IDE's AI chat.",
+        "tier": 1
+      },
+      {
+        "t": "Dash0 only works through its browser-based web console.",
+        "tier": 0
+      }
+    ],
+    "learn": "Lead with the official, hosted MCP server: nothing to install locally, OAuth sign-in, and connections show up in audit logs. Read-only telemetry queries are free, while Agent0 via MCP uses credits that an admin can switch off. It also works the other way: Agent0 can connect to a customer's own MCP servers.",
+    "docs": [
+      {
+        "label": "Dash0 MCP Server: overview and setup",
+        "url": "https://www.dash0.com/hub/integrations/int_dash0_mcp/overview"
+      },
+      {
+        "label": "Dash0 MCP Server on GitHub",
+        "url": "https://github.com/dash0hq/mcp-dash0"
+      },
+      {
+        "label": "Connect Claude",
+        "url": "https://www.dash0.com/hub/integrations/int_claude/overview"
+      },
+      {
+        "label": "Connect Cursor",
+        "url": "https://www.dash0.com/hub/integrations/int_cursor/overview"
+      },
+      {
+        "label": "Connect GitHub Copilot",
+        "url": "https://www.dash0.com/hub/integrations/int_copilot/overview"
+      },
+      {
+        "label": "Connect Windsurf",
+        "url": "https://www.dash0.com/hub/integrations/int_windsurf/overview"
+      },
+      {
+        "label": "Dash0 CLI: about",
+        "url": "https://www.dash0.com/docs/dash0/miscellaneous/tooling/dash0-cli/about"
+      },
+      {
+        "label": "Dash0 CLI: quickstart",
+        "url": "https://www.dash0.com/docs/dash0/miscellaneous/tooling/dash0-cli/quickstart"
+      },
+      {
+        "label": "Dash0 CLI: command reference",
+        "url": "https://www.dash0.com/docs/dash0/miscellaneous/tooling/dash0-cli/commands"
+      },
+      {
+        "label": "Dash0 API reference",
+        "url": "https://www.dash0.com/docs/api-reference"
+      },
+      {
+        "label": "Agent0 overview (AI tool integrations)",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/overview"
+      },
+      {
+        "label": "Agent0 tools and connectors (using your own MCP servers)",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/tools-connectors"
+      },
+      {
+        "label": "Set up an MCP server for Agent0",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/overview/integrate-with-agent0/generic-mcp/setup"
+      },
+      {
+        "label": "Pricing (Agent0 credits)",
+        "url": "https://www.dash0.com/pricing"
+      }
+    ]
+  },
+  {
+    "attendee": "\"I'm a developer. Explain what Dash0 does for me when production breaks at 2 AM.\"",
+    "options": [
+      {
+        "t": "Instead of jumping between separate log, metric, and trace tools, Dash0 correlates your signals using OpenTelemetry context. Agent0 acts as an AI SRE: it investigates the anomaly, points to the spans causing latency and the related log errors, and helps you find the likely root cause faster.",
+        "tier": 2
+      },
+      {
+        "t": "It gives you nice dashboards with AI chat.",
+        "tier": 1
+      },
+      {
+        "t": "It's a platform that lets you build cost tracking dashboards.",
+        "tier": 0
+      }
+    ],
+    "learn": "Developers don't buy observability platforms, they buy speed to root cause and getting back to sleep.",
+    "docs": [
+      {
+        "label": "About Agent0",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0"
+      },
+      {
+        "label": "Agent0 overview",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/overview"
+      },
+      {
+        "label": "About tracing",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/tracing/about-tracing"
+      },
+      {
+        "label": "Agent0 Chat",
+        "url": "https://www.dash0.com/docs/dash0/ai/agent0/chat"
+      },
+      {
+        "label": "Agent0 product page",
+        "url": "https://www.dash0.com/agent0"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Our devs are using Cursor and GitHub Copilot to ship faster, but incidents are rising and cloud costs are spiking.\"",
+    "options": [
+      {
+        "t": "That's the challenge today: AI helps teams ship code faster, but production has to keep up. Dash0 gives you Darkplane to see what AI coding costs and how much of the output you keep, plus Agent0 to investigate incidents. You ship more without breaking production, and you pay per signal, not per host.",
+        "tier": 2
+      },
+      {
+        "t": "We're an AI-first monitoring tool with cheap pricing.",
+        "tier": 1
+      },
+      {
+        "t": "Dash0 writes all your code for you automatically.",
+        "tier": 0
+      }
+    ],
+    "learn": "Executive leaders buy outcomes: risk, velocity, and predictable cost. Use the \"Ship More, Break Less\" message.",
+    "docs": [
+      {
+        "label": "About Darkplane",
+        "url": "https://www.dash0.com/docs/dash0/darkplane/overview"
+      },
+      {
+        "label": "About AI SDLC Insights",
+        "url": "https://www.dash0.com/docs/dash0/darkplane/insights"
+      },
+      {
+        "label": "AI SDLC Insights: the overview",
+        "url": "https://www.dash0.com/docs/dash0/darkplane/insights/overview"
+      },
+      {
+        "label": "Darkplane product page",
+        "url": "https://www.dash0.com/darkplane"
+      },
+      {
+        "label": "Agent0 product page",
+        "url": "https://www.dash0.com/agent0"
+      },
+      {
+        "label": "Blog: Build with AI. Ship with confidence.",
+        "url": "https://www.dash0.com/blog/build-with-ai-ship-with-confidence"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Our CFO made us cut our Datadog bill by 30% this quarter. How does Dash0's pricing help?\"",
+    "options": [
+      {
+        "t": "Many tools charge by host, by seat, or by product. Dash0 charges by signal: logs, spans, and metric data points, with no per-user or per-host base fees, and SignalControl helps cut noisy data before you pay to store it. That makes cost easier to predict.",
+        "tier": 2
+      },
+      {
+        "t": "Dash0 is automatically 10x cheaper than any legacy platform.",
+        "tier": 1
+      },
+      {
+        "t": "We charge a flat monthly fee regardless of how much data you send.",
+        "tier": 0
+      }
+    ],
+    "learn": "Avoid quoting discount numbers. Explain the structural pricing difference: pay per signal versus host and seat fees.",
+    "docs": [
+      {
+        "label": "Dash0 pricing",
+        "url": "https://www.dash0.com/pricing"
+      },
+      {
+        "label": "Dash0 transparent cost",
+        "url": "https://www.dash0.com/transparent-cost"
+      },
+      {
+        "label": "About SignalControl",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/about-signal-control"
+      },
+      {
+        "label": "SignalControl: filter out spam",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/filter-out-spam"
+      },
+      {
+        "label": "Datadog docs: billing and pricing units",
+        "url": "https://docs.datadoghq.com/account_management/billing/pricing/"
+      }
+    ]
+  },
+  {
+    "attendee": "\"I spend half my shift jumping between three tools just to trace one failed request. How does Dash0 fix this?\"",
+    "options": [
+      {
+        "t": "Dash0 brings logs, metrics, and traces together on OpenTelemetry context. You can go from a metric spike to the related trace and the matching log lines without switching tools.",
+        "tier": 2
+      },
+      {
+        "t": "Dash0 builds faster dashboards that load instantly.",
+        "tier": 1
+      },
+      {
+        "t": "Dash0 eliminates errors so you won't get on-call alerts anymore.",
+        "tier": 0
+      }
+    ],
+    "learn": "Focus on removing friction: one data model, connected signals, and faster time to resolution.",
+    "docs": [
+      {
+        "label": "About tracing",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/tracing/about-tracing"
+      },
+      {
+        "label": "SignalStore",
+        "url": "https://www.dash0.com/signalstore"
+      },
+      {
+        "label": "Dash0 log management",
+        "url": "https://www.dash0.com/log-management"
+      },
+      {
+        "label": "Dash0 Observability",
+        "url": "https://www.dash0.com/observability"
+      },
+      {
+        "label": "Dash0 documentation",
+        "url": "https://www.dash0.com/docs/dash0"
+      }
+    ]
+  },
+  {
+    "attendee": "\"My team is shipping code 5x faster with AI, but production stability is dropping. What's your value proposition?\"",
+    "options": [
+      {
+        "t": "Ship More, Break Less. Darkplane shows what your AI coding costs and how much of the output your team keeps, and Agent0 investigates production incidents when changes cause problems. You keep velocity high and reliability in view.",
+        "tier": 2
+      },
+      {
+        "t": "We're an AI tool that prevents developers from making bugs.",
+        "tier": 1
+      },
+      {
+        "t": "Dash0 slows down deployments until code is proven bug-free.",
+        "tier": 0
+      }
+    ],
+    "learn": "Align with executive outcomes: delivery speed and production stability together.",
+    "docs": [
+      {
+        "label": "Blog: Beyond observability",
+        "url": "https://www.dash0.com/blog/beyond-observability"
+      },
+      {
+        "label": "Blog: Build with AI. Ship with confidence.",
+        "url": "https://www.dash0.com/blog/build-with-ai-ship-with-confidence"
+      },
+      {
+        "label": "Darkplane product page",
+        "url": "https://www.dash0.com/darkplane"
+      },
+      {
+        "label": "Agent0 product page",
+        "url": "https://www.dash0.com/agent0"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We've been burned by vendor lock-in twice. Why should I trust Dash0?\"",
+    "options": [
+      {
+        "t": "Dash0 is built on open standards: OpenTelemetry for instrumentation, PromQL for queries, and Perses for dashboards. You send data with open collectors, so your instrumentation stays standard. If you ever leave, you won't need to re-instrument your application code.",
+        "tier": 2
+      },
+      {
+        "t": "We promise we will never raise prices or lock you in.",
+        "tier": 1
+      },
+      {
+        "t": "Every vendor locks you in, but our lock-in is better.",
+        "tier": 0
+      }
+    ],
+    "learn": "Don't just promise. Point to concrete open standards as proof.",
+    "docs": [
+      {
+        "label": "Dash0 comparison: best OpenTelemetry tools",
+        "url": "https://www.dash0.com/comparisons/best-opentelemetry-tools"
+      },
+      {
+        "label": "Dash0 transparent cost",
+        "url": "https://www.dash0.com/transparent-cost"
+      },
+      {
+        "label": "Dash0 dashboards",
+        "url": "https://www.dash0.com/dashboards"
+      },
+      {
+        "label": "OpenTelemetry eBook (free)",
+        "url": "https://www.dash0.com/ebooks/opentelemetry-for-dummies"
+      },
+      {
+        "label": "Dash0 documentation",
+        "url": "https://www.dash0.com/docs/dash0"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We're breaking our monolith into dozens of microservices on Kubernetes. Where do we start with monitoring?\"",
+    "options": [
+      {
+        "t": "Microservices make distributed tracing essential. With OpenTelemetry auto-instrumentation you can get traces without writing custom tracing code for every service, and Dash0 shows how your services depend on each other and where time and errors come from.",
+        "tier": 2
+      },
+      {
+        "t": "You start by installing our agent on all your virtual machines.",
+        "tier": 1
+      },
+      {
+        "t": "You don't need tracing for microservices, logs are enough.",
+        "tier": 0
+      }
+    ],
+    "learn": "Tailor it to cloud-native transformation: auto-instrumentation, and traces that show how services depend on each other.",
+    "docs": [
+      {
+        "label": "Kubernetes operator: automatic workload instrumentation",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/dash0-operator/auto-instrumentation"
+      },
+      {
+        "label": "About tracing",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/tracing/about-tracing"
+      },
+      {
+        "label": "OpenTelemetry Collector integration (Dash0 Hub)",
+        "url": "https://www.dash0.com/hub/integrations/int_opentelemetry-collector/overview"
+      },
+      {
+        "label": "OpenTelemetry eBook (free)",
+        "url": "https://www.dash0.com/ebooks/opentelemetry-for-dummies"
+      }
+    ]
+  },
+  {
+    "attendee": "\"We want to try Dash0, but we can't risk breaking our current monitoring during a migration.\"",
+    "options": [
+      {
+        "t": "No rip and replace needed. With the OpenTelemetry Collector you can send a copy of your telemetry to Dash0 alongside your current tool during the 14 day trial and compare them with live data.",
+        "tier": 2
+      },
+      {
+        "t": "You should cancel your current vendor contract before starting the trial.",
+        "tier": 1
+      },
+      {
+        "t": "You must point all application SDKs directly to Dash0's servers.",
+        "tier": 0
+      }
+    ],
+    "learn": "Emphasize risk-free parallel evaluation through the OpenTelemetry Collector.",
+    "docs": [
+      {
+        "label": "OpenTelemetry Collector integration (Dash0 Hub)",
+        "url": "https://www.dash0.com/hub/integrations/int_opentelemetry-collector/overview"
+      },
+      {
+        "label": "Dash0 transparent cost",
+        "url": "https://www.dash0.com/transparent-cost"
+      },
+      {
+        "label": "Start a free trial",
+        "url": "https://www.dash0.com/sign-up"
+      },
+      {
+        "label": "Dash0 comparison: best OpenTelemetry tools",
+        "url": "https://www.dash0.com/comparisons/best-opentelemetry-tools"
+      }
+    ]
+  },
+  {
+    "attendee": "\"Hey, what's Dash0?\"",
+    "options": [
+      {
+        "t": "We're an OpenTelemetry-native platform that closes the loop from code to production: Darkplane shows what your AI builds and what it costs, observability covers everything running in production, and Agent0 investigates and fixes problems. What do you work on, and what do you use for monitoring today?",
+        "tier": 2
+      },
+      {
+        "t": "Do you use OpenTelemetry or Datadog right now?",
+        "tier": 1
+      },
+      {
+        "t": "Are you the engineering decision-maker for your team?",
+        "tier": 0
+      }
+    ],
+    "learn": "Give the one-line pitch as a loop, not one feature: Dash0 governs what AI builds (Darkplane), observes everything in production, and fixes problems (Agent0), all on OpenTelemetry. Then ask who they are and what they use today, so you can tailor the next answer. Save purchasing-authority questions for later.",
+    "docs": [
+      {
+        "label": "Dash0 documentation",
+        "url": "https://www.dash0.com/docs/dash0"
+      },
+      {
+        "label": "Blog: Beyond observability",
+        "url": "https://www.dash0.com/blog/beyond-observability"
+      },
+      {
+        "label": "Dash0 Observability",
+        "url": "https://www.dash0.com/observability"
+      },
+      {
+        "label": "Agent0 product page",
+        "url": "https://www.dash0.com/agent0"
+      },
+      {
+        "label": "Darkplane product page",
+        "url": "https://www.dash0.com/darkplane"
+      },
+      {
+        "label": "SignalStore",
+        "url": "https://www.dash0.com/signalstore"
+      }
+    ]
+  },
+  {
+    "attendee": "\"I manage our Kubernetes platform. What does Dash0 offer us?\"",
+    "options": [
+      {
+        "t": "Dash0 is managed OpenTelemetry observability, with cost controls like SignalControl. How much engineering effort does your team spend today maintaining observability pipelines and managing vendor costs across your clusters?",
+        "tier": 2
+      },
+      {
+        "t": "How many Kubernetes nodes are you running in cloud environments?",
+        "tier": 1
+      },
+      {
+        "t": "What is your allocated budget for monitoring tools this year?",
+        "tier": 0
+      }
+    ],
+    "learn": "Focus discovery on maintenance effort and cost friction.",
+    "docs": [
+      {
+        "label": "Kubernetes operator: overview",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/dash0-operator/overview"
+      },
+      {
+        "label": "About Kubernetes monitoring",
+        "url": "https://www.dash0.com/docs/dash0/monitoring/kubernetes/about-kubernetes"
+      },
+      {
+        "label": "About SignalControl",
+        "url": "https://www.dash0.com/docs/dash0/telemetry/signal-control/about-signal-control"
+      },
+      {
+        "label": "Dash0 transparent cost",
+        "url": "https://www.dash0.com/transparent-cost"
+      }
+    ]
+  },
+  {
+    "attendee": "\"I run engineering here. Give me the 30-second pitch.\"",
+    "options": [
+      {
+        "t": "Dash0 helps teams ship faster with AI while keeping production stable and costs predictable. As your team ships more with AI, what worries you most: time to resolve outages, tool sprawl, or observability cost?",
+        "tier": 2
+      },
+      {
+        "t": "How many software engineers are on your team right now?",
+        "tier": 1
+      },
+      {
+        "t": "Can I scan your badge so sales can send you a pitch deck?",
+        "tier": 0
+      }
+    ],
+    "learn": "Offer three executive pains (time to resolve, tool sprawl, cost) and let them pick.",
+    "docs": [
+      {
+        "label": "Blog: Beyond observability",
+        "url": "https://www.dash0.com/blog/beyond-observability"
+      },
+      {
+        "label": "Agent0 product page",
+        "url": "https://www.dash0.com/agent0"
+      },
+      {
+        "label": "Darkplane product page",
+        "url": "https://www.dash0.com/darkplane"
+      },
+      {
+        "label": "Dash0 Observability",
+        "url": "https://www.dash0.com/observability"
+      }
+    ]
+  },
+  {
+    "attendee": "\"This looks interesting, but I'm just a senior developer, not the manager.\"",
+    "options": [
+      {
+        "t": "That's great, developers are the ones who use these tools every day. If you tried it and liked it, who else on your team would look at it with you, and how do tools like this normally get approved?",
+        "tier": 2
+      },
+      {
+        "t": "Can you introduce me to your VP of Engineering right now?",
+        "tier": 1
+      },
+      {
+        "t": "Since you don't have purchasing power, please hand this flyer to your boss.",
+        "tier": 0
+      }
+    ],
+    "learn": "Treat individual contributors as champions and ask about the evaluation process, not their title.",
+    "docs": [
+      {
+        "label": "Start a free trial",
+        "url": "https://www.dash0.com/sign-up"
+      },
+      {
+        "label": "Dash0 documentation",
+        "url": "https://www.dash0.com/docs/dash0"
+      },
+      {
+        "label": "OpenTelemetry eBook (free)",
+        "url": "https://www.dash0.com/ebooks/opentelemetry-for-dummies"
+      },
+      {
+        "label": "Dash0 MCP Server: overview and setup",
+        "url": "https://www.dash0.com/hub/integrations/int_dash0_mcp/overview"
+      }
+    ]
+  }
+];
+
+var LOGO = '<svg class="logo" role="img" aria-label="Dash0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 105 20" height="22" width="115"><title>Dash0</title><path fill="currentColor" d="M7.04688 16.9685C5.17773 18.8328 2.64258 19.8799 0 19.8799V0C2.64258 0 5.17773 1.04736 7.04688 2.91138C8.91602 4.77539 9.96484 7.30371 9.96484 9.93994C9.96484 12.5762 8.91602 15.1045 7.04688 16.9685ZM38.6367 12.8672C38.6367 17.092 41.084 20 45.2383 20C46.916 20 48.4551 19.2593 49.2539 18.0522V19.7805H52.6094V0.027832H49.2539V7.6272C48.4551 6.50244 46.998 5.73413 45.1836 5.73413C41.084 5.73413 38.6367 8.64209 38.6367 12.8672ZM49.4727 12.8672C49.4727 15.4185 47.9883 17.092 45.7324 17.092C43.4766 17.092 41.9922 15.4185 41.9922 12.8672C41.9922 10.3157 43.4766 8.64209 45.7324 8.64209C47.9883 8.64209 49.4727 10.3157 49.4727 12.8672ZM59.2539 5.73413C62.7754 5.73413 65.25 7.7644 65.25 10.8918V15.1716H68.2051C68.3418 16.4885 69.3594 17.3115 70.8711 17.3115C71.5762 17.3115 72.1562 17.1238 72.543 16.8232C72.8809 16.5613 73.0723 16.2136 73.0723 15.8301C73.0723 14.5386 71.7305 14.3086 70.1758 14.042C68.0312 13.6741 65.4805 13.2366 65.4805 9.84937C65.4805 7.43506 67.5996 5.73413 70.459 5.73413C73.7051 5.73413 75.9316 7.51733 76.0703 10.2061H72.9902C72.7969 8.9165 71.6152 8.25806 70.541 8.25806C70.2051 8.25806 69.9004 8.30078 69.6348 8.38232C69.4102 8.45166 69.2148 8.54932 69.0527 8.67285C68.7207 8.92578 68.5332 9.2876 68.5332 9.7395C68.5332 10.9619 69.8203 11.1345 71.3418 11.3386C73.543 11.6338 76.2344 11.9949 76.2344 15.6929C76.2344 18.2991 74.1172 20 70.8711 20C67.8828 20 65.7891 18.5198 65.25 16.1023V19.7805H61.9219V17.7229C61.3457 19.0947 59.75 20 57.7695 20C55.0195 20 53.1484 18.2441 53.1484 15.8574C53.1484 13.1689 55.2402 11.4954 58.3477 11.4954H60.9043C61.5918 11.4954 61.9219 11.1113 61.9219 10.5625C61.9219 10.4824 61.918 10.4038 61.9102 10.3267C61.9043 10.2534 61.8945 10.1814 61.8809 10.1108C61.8574 9.99316 61.8262 9.87964 61.7852 9.77051L61.7676 9.72168L61.6816 9.5332L61.6484 9.47266L61.5762 9.35596C61.1328 8.67993 60.2754 8.25806 59.0898 8.25806C57.3027 8.25806 56.2285 9.38281 56.1738 10.6174H53.1484C53.3145 7.87402 55.6523 5.73413 59.2539 5.73413ZM58.5664 17.5034C60.6855 17.5034 61.9219 16.022 61.9219 13.937V13.7175H58.8145C58.0859 13.7175 57.4785 13.9243 57.0586 14.2869C56.6543 14.6355 56.4219 15.1284 56.4219 15.7202C56.4219 16.7903 57.3027 17.5034 58.5664 17.5034ZM76.5898 19.7805V0.027832H79.9453V8.09351C80.7148 6.58472 82.3105 5.73413 84.291 5.73413C87.3984 5.73413 89.4336 7.98389 89.4336 11.2209V19.7805H86.0781V11.9343C86.0781 10.0413 84.8965 8.72461 83.1621 8.72461C81.293 8.72461 79.9453 10.2061 79.9453 12.2361V19.7805H76.5898ZM89.9551 10.8369C89.9551 16.7078 92.1289 20 96.9141 20H98.0137C102.799 20 105 16.7078 105 10.8369V9.52002C105 3.64917 102.799 0.356934 98.0137 0.356934H96.9141C92.1289 0.356934 89.9551 3.64917 89.9551 9.52002V10.8369ZM97.8496 16.845H97.0781C94.9062 16.845 93.5859 15.1716 93.5859 11.7971V8.55981C93.5859 5.15796 94.9062 3.48462 97.0781 3.48462H97.8496C100.021 3.48462 101.369 5.15796 101.369 8.55981V11.7971C101.369 15.1716 100.021 16.845 97.8496 16.845ZM20.5 20C26.0234 20 30.5 15.5229 30.5 10C30.5 4.47705 26.0234 0 20.5 0C14.9766 0 10.5 4.47705 10.5 10C10.5 15.5229 14.9766 20 20.5 20Z"/></svg>';
+var BRAND = '<span class="brandwrap">' + LOGO + '</span>';
+var app = document.getElementById("app");
+var S = null;
+
+function bestText(sc){ return sc.options.filter(function(o){return o.tier===2;})[0].t; }
+function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function shuffle(a){ a = a.slice(); for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function getBest(){ try { var v = localStorage.getItem("boothBest"); return v ? parseInt(v,10) : 0; } catch(e){ return 0; } }
+function setBest(n){ try { localStorage.setItem("boothBest", String(n)); } catch(e){} }
+
+var setup = { mode:"solo", n1:"", n2:"" };
+
+function renderStart(){
+  var pair = setup.mode === "pair";
+  app.innerHTML =
+    '<div class="top">' + BRAND + '</div>' +
+    '<div class="card hero">' +
+      '<h1>Practice the real booth conversations before you are in them.</h1>' +
+      '<p>' + SCENARIOS.length + ' booth questions on Dash0, OpenTelemetry, competitors, and what each persona cares about. Say your answer out loud first, then check it. Each best answer earns 10 points, partly right answers earn 5, and back to back best answers add a streak bonus.</p>' +
+      '<div class="field"><div class="seg" role="group" aria-label="Mode">' +
+        '<button data-mode="solo" aria-pressed="' + (!pair) + '">Solo</button>' +
+        '<button data-mode="pair" aria-pressed="' + pair + '">Pair (take turns)</button></div></div>' +
+      (pair ? '<div class="field"><div class="names">' +
+        '<input type="text" id="n1" placeholder="Player 1" value="' + esc(setup.n1) + '" aria-label="Player 1 name">' +
+        '<input type="text" id="n2" placeholder="Player 2" value="' + esc(setup.n2) + '" aria-label="Player 2 name"></div>' +
+        '<p class="hint" style="margin-top:8px">Your partner reads the attendee line out loud, and you answer. Turns alternate.</p></div>' : '') +
+      '<button class="primary" id="go">Start</button>' +
+    '</div>';
+  app.querySelectorAll("[data-mode]").forEach(function(b){ b.onclick=function(){ readNames(); setup.mode=b.dataset.mode; renderStart(); }; });
+  document.getElementById("go").onclick = function(){ readNames(); startGame(); };
+}
+function readNames(){
+  var a = document.getElementById("n1"), b = document.getElementById("n2");
+  if (a) setup.n1 = a.value; if (b) setup.n2 = b.value;
+}
+
+function startGame(){
+  var pair = setup.mode === "pair";
+  var players = pair
+    ? [{name:(setup.n1.trim()||"Player 1"),score:0,best:0,streak:0,played:0},{name:(setup.n2.trim()||"Player 2"),score:0,best:0,streak:0,played:0}]
+    : [{name:"You",score:0,best:0,streak:0,played:0}];
+  S = { pair:pair, players:players, order:shuffle(SCENARIOS.map(function(_,i){return i;})),
+        i:0, phase:"prompt", opts:null, chosen:null, last:null, log:[] };
+  renderPlay();
+}
+
+function chipsHtml(){
+  var cur = S.pair ? S.i % 2 : 0;
+  return '<div class="chips">' + S.players.map(function(p,idx){
+    return '<span class="chip ' + (S.pair && idx===cur ? 'on' : '') + '">' + esc(p.name) + ': ' + p.score + (p.streak>1 ? ' (streak ' + p.streak + ')' : '') + '</span>';
+  }).join('') + '</div>';
+}
+
+function renderPlay(){
+  var sc = SCENARIOS[S.order[S.i]];
+  var cur = S.pair ? S.i % 2 : 0;
+  var p = S.players[cur];
+  var total = S.order.length;
+  var h = '<div class="top">' + BRAND + '' + chipsHtml() + '</div>' +
+    '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + total + '" aria-valuenow="' + S.i + '"><i style="width:' + (S.i/total*100) + '%"></i></div>' +
+    '<div class="card">' +
+        '<div class="says">' + (sc.scene ? '<span class="scene">' + esc(sc.scene) + '</span>' : '') + esc(sc.attendee) + '</div>' +
+    '<h2 class="q">' + esc(sc.question || "What do you say?") + '</h2>';
+
+  if (S.phase === "prompt"){
+    h += '<p class="hint">Say your answer out loud first. Then check it against the options.</p>' +
+         '<button class="primary" id="reveal">I said it, show options</button>';
+  } else {
+    var letters = ["A","B","C"];
+    h += '<div class="opts" id="opts">' + S.opts.map(function(o,idx){
+      var done = S.phase === "result";
+      var cls = "opt" + (done ? " t" + o.tier : "") + (done && S.chosen===idx ? " picked" : "");
+      var tag = done ? (o.tier===2 ? "Best answer" : o.tier===1 ? "Partly right" : "Wrong answer") : "";
+      return '<button class="' + cls + '" data-i="' + idx + '"' + (done ? ' disabled' : '') + '>' +
+        '<span class="k">' + letters[idx] + '</span><span class="txt">' + esc(o.t) +
+        (done ? '<span class="tag">' + tag + '</span>' : '') + '</span></button>';
+    }).join('') + '</div>';
+    if (S.phase === "result"){
+      var L = S.last;
+      h += '<div aria-live="polite"><div class="pts">+' + L.pts + ' points' + (L.bonus ? ' (includes ' + L.bonus + ' streak bonus)' : '') + '</div></div>' +
+           '<div class="model"><b>Learn</b>' + esc(sc.learn) +
+             (sc.docs ? '<div class="docs"><b>Documentation</b>' + (Array.isArray(sc.docs) ? sc.docs : [sc.docs]).map(function(d){ return '<a href="' + esc(d.url) + '" target="_blank" rel="noopener noreferrer">' + esc(d.label) + '</a>'; }).join('') + '</div>' : '') +
+           '</div>' +
+           '<div class="actions"><button class="primary" id="next">' + (S.i+1 >= total ? 'See results' : 'Next round') + '</button></div>';
+    }
+  }
+  h += '</div><div class="actions"><button class="ghost" id="finish">Finish now</button></div>';
+  app.innerHTML = h;
+  window.scrollTo(0,0);
+
+  var fin = document.getElementById("finish");
+  if (fin) fin.onclick = function(){ if (S.log.length) { renderEnd(); } else { renderStart(); } };
+  var rv = document.getElementById("reveal");
+  if (rv) rv.onclick = function(){ S.opts = shuffle(sc.options); S.phase = "options"; renderPlay(); };
+  app.querySelectorAll(".opt").forEach(function(b){
+    b.onclick = function(){ choose(parseInt(b.dataset.i,10)); };
+  });
+  var nx = document.getElementById("next");
+  if (nx) nx.onclick = function(){
+    S.i++;
+    if (S.i >= S.order.length) { renderEnd(); }
+    else { S.phase = "prompt"; S.opts = null; S.chosen = null; S.last = null; renderPlay(); }
+  };
+}
+
+function choose(idx){
+  var cur = S.pair ? S.i % 2 : 0;
+  var p = S.players[cur];
+  var o = S.opts[idx];
+  var pts = 0, bonus = 0;
+  if (o.tier === 2){
+    p.streak++; p.best++;
+    bonus = Math.min(p.streak - 1, 3) * 2;
+    pts = 10 + bonus;
+  } else {
+    p.streak = 0;
+    pts = o.tier === 1 ? 5 : 0;
+  }
+  p.score += pts; p.played++;
+  S.chosen = idx; S.phase = "result"; S.last = {pts:pts, bonus:bonus};
+  S.log.push({sc:SCENARIOS[S.order[S.i]], tier:o.tier, player:cur});
+  renderPlay();
+}
+
+function renderEnd(){
+  var total = S.order.length;
+  var h = '<div class="top">' + BRAND + '</div><div class="card">';
+  if (S.pair){
+    var ps = S.players.slice().sort(function(a,b){return b.score-a.score;});
+    var tie = ps[0].score === ps[1].score;
+    h += '<h2>' + (tie ? 'It is a tie' : esc(ps[0].name) + ' wins') + '</h2><div class="podium">' +
+      ps.map(function(p){ return '<div class="pl' + (!tie && p===ps[0] ? ' win' : '') + '"><span>' + esc(p.name) + '</span><span>' + p.score + ' points, ' + p.best + ' best answers</span></div>'; }).join('') + '</div>';
+  } else {
+    var p = S.players[0];
+    var share = p.best / (p.played || 1);
+    var rank = share >= 0.9 ? "Booth lead" : share >= 0.7 ? "Conversation ready" : share >= 0.4 ? "Warming up" : "Keep practicing";
+    var prev = getBest(), isNew = p.score > prev;
+    if (isNew) setBest(p.score);
+    h += '<div class="score-big">' + p.score + '</div><div class="rank">' + rank + '</div>' +
+         '<p class="hint">' + p.best + ' of ' + p.played + ' best answers' + (isNew ? '. New personal best.' : '. Personal best: ' + prev + '.') + '</p>';
+  }
+
+  var by = {};
+  S.log.forEach(function(e){ var k = e.sc.persona; by[k] = by[k] || {n:0,b:0}; by[k].n++; if (e.tier===2) by[k].b++; });
+  h += '<table><thead><tr><th>Persona</th><th>Best answers</th></tr></thead><tbody>' +
+    Object.keys(by).map(function(k){ return '<tr><td>' + esc(k) + '</td><td>' + by[k].b + ' of ' + by[k].n + '</td></tr>'; }).join('') + '</tbody></table>';
+
+  var missed = S.log.filter(function(e){ return e.tier !== 2; });
+  if (missed.length){
+    h += '<h3 style="margin-top:20px">Worth another look</h3>' + missed.map(function(e){
+      return '<div class="miss"><q>' + esc(e.sc.attendee) + '</q>' + esc(bestText(e.sc)) + '</div>';
+    }).join('');
+  } else {
+    h += '<p class="hint">No misses this round.</p>';
+  }
+  h += '<div class="actions"><button class="primary" id="again">Play again</button><button class="ghost" id="setup">Change setup</button></div>' +
+       '<p class="note">Scores here stay on your device. Model answers were drafted from the public Dash0 docs, pricing, and comparison pages in September 2026. Features marked new or rolling out change quickly, so use the source links and check with product marketing before relying on any claim.</p></div>';
+  app.innerHTML = h;
+  window.scrollTo(0,0);
+  document.getElementById("again").onclick = startGame;
+  document.getElementById("setup").onclick = renderStart;
+}
+
+renderStart();
+</script>
+</body>
+</html>
